@@ -90,7 +90,7 @@ const Index = () => {
             </p>
             <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
               <button onClick={() => setShowModal(true)} className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-3.5 rounded-full text-base font-semibold">
-                Connect Alpha
+                Connect Wallet
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
@@ -220,7 +220,7 @@ const Index = () => {
             Join millions of users who trust us with their crypto. Available on iOS, Android, and as a browser extension.
           </p>
           <button onClick={() => setShowModal(true)} className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-3.5 rounded-full text-base font-semibold">
-            Connect Alpha
+            Connect Wallet
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
